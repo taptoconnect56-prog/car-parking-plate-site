@@ -31,226 +31,314 @@ const params =
 
 
 const stickerId =
-    (
-        params.get("sticker") ||
-        params.get("stickerId") ||
-        ""
-    )
-    .trim()
-    .toUpperCase();
+(
+    params.get("sticker") ||
+    params.get("stickerId") ||
+    ""
+)
+.trim()
+.toUpperCase();
+
 
 
 console.log(
-    "Owner page sticker:",
+    "Sticker ID:",
     stickerId
 );
+
 
 
 // =====================================
 // LOAD OWNER
 // =====================================
 
-async function loadOwner() {
+async function loadOwner(){
 
 
-    // ---------------------------------
-    // CHECK STICKER ID
-    // ---------------------------------
+if(!stickerId){
 
-    if (!stickerId) {
+    ownerName.textContent =
+    "Sticker ID Missing";
 
-        ownerName.textContent =
-            "Sticker ID Missing";
+    vehicleNumber.textContent =
+    "Invalid sticker";
 
-        vehicleNumber.textContent =
-            "Please scan a valid Tap to Connect sticker.";
+    callButton.style.display="none";
 
-        callButton.style.display =
-            "none";
-
-        return;
-
-    }
-
-
-    try {
-
-
-        // ---------------------------------
-        // GET FIRESTORE DOCUMENT
-        // ---------------------------------
-
-        const stickerRef =
-            doc(
-                db,
-                "stickers",
-                stickerId
-            );
-
-
-        const stickerSnap =
-            await getDoc(
-                stickerRef
-            );
-
-
-        console.log(
-            "Sticker exists:",
-            stickerSnap.exists()
-        );
-
-
-        // ---------------------------------
-        // NOT FOUND
-        // ---------------------------------
-
-        if (!stickerSnap.exists()) {
-
-            ownerName.textContent =
-                "Sticker Not Found";
-
-            vehicleNumber.textContent =
-                "Sticker ID: " +
-                stickerId;
-
-            callButton.style.display =
-                "none";
-
-            return;
-
-        }
-
-
-        // ---------------------------------
-        // GET DATA
-        // ---------------------------------
-
-        const data =
-            stickerSnap.data();
-
-
-        console.log(
-            "Owner data:",
-            data
-        );
-
-
-        // ---------------------------------
-        // CHECK STATUS
-        // ---------------------------------
-
-        if (
-            String(data.status)
-                .toLowerCase() !==
-            "active"
-        ) {
-
-            ownerName.textContent =
-                "Sticker Not Activated";
-
-            vehicleNumber.textContent =
-                "Sticker ID: " +
-                stickerId;
-
-            callButton.style.display =
-                "none";
-
-            return;
-
-        }
-
-
-        // ---------------------------------
-        // OWNER NAME
-        // ---------------------------------
-
-        ownerName.textContent =
-            data.name ||
-            "Vehicle Owner";
-
-
-        // ---------------------------------
-        // VEHICLE NUMBER
-        // ---------------------------------
-
-        vehicleNumber.textContent =
-            data.vehicle ||
-            "Vehicle Number Not Available";
-
-
-        // ---------------------------------
-        // MOBILE NUMBER
-        // ---------------------------------
-
-        const mobile =
-            String(
-                data.mobile ||
-                ""
-            )
-            .replace(
-                /\D/g,
-                ""
-            );
-
-
-        if (!mobile) {
-
-            callButton.style.display =
-                "none";
-
-            return;
-
-        }
-
-
-        // ---------------------------------
-        // CALL OWNER
-        // ---------------------------------
-
-        callButton.href =
-            "tel:+91" + mobile;
-
-
-        // ---------------------------------
-        // SHOW BUTTON
-        // ---------------------------------
-
-        callButton.style.display =
-            "inline-block";
-
-
-        console.log(
-            "Owner page loaded successfully"
-        );
-
-
-    } catch (error) {
-
-
-        console.error(
-            "Owner page error:",
-            error
-        );
-
-
-        ownerName.textContent =
-            "Unable to Load";
-
-
-        vehicleNumber.textContent =
-            "Please try again later.";
-
-
-        callButton.style.display =
-            "none";
-
-    }
+    return;
 
 }
 
 
+
+try{
+
+
+const stickerRef =
+doc(
+    db,
+    "stickers",
+    stickerId
+);
+
+
+
+const stickerSnap =
+await getDoc(
+    stickerRef
+);
+
+
+
+if(!stickerSnap.exists()){
+
+
+ownerName.textContent =
+"Sticker Not Found";
+
+
+vehicleNumber.textContent =
+stickerId;
+
+
+callButton.style.display="none";
+
+
+return;
+
+
+}
+
+
+
+const data =
+stickerSnap.data();
+
+
+
+if(
+String(data.status).toLowerCase()
+!=="active"
+){
+
+
+ownerName.textContent =
+"Sticker Not Activated";
+
+
+vehicleNumber.textContent =
+stickerId;
+
+
+callButton.style.display="none";
+
+
+return;
+
+
+}
+
+
+
+// OWNER NAME
+
+ownerName.textContent =
+data.name || 
+"Vehicle Owner";
+
+
+
+// VEHICLE
+
+vehicleNumber.textContent =
+data.vehicle ||
+"Vehicle Number";
+
+
+
+
+
+// MOBILE
+
+const mobile =
+String(data.mobile || "")
+.replace(/\D/g,"");
+
+
+
+if(!mobile){
+
+
+callButton.style.display="none";
+
+return;
+
+
+}
+
+
+
+
+
 // =====================================
-// START
+// MASKED CALL
 // =====================================
+
+
+callButton.onclick =
+async function(e){
+
+
+e.preventDefault();
+
+
+
+callButton.innerHTML =
+"Connecting...";
+
+
+callButton.disabled=true;
+
+
+
+try{
+
+
+const response =
+await fetch(
+"/api/exotel",
+{
+
+method:"POST",
+
+headers:{
+"Content-Type":
+"application/json"
+},
+
+
+body:JSON.stringify({
+
+stickerId:
+stickerId,
+
+
+ownerMobile:
+mobile
+
+
+})
+
+
+}
+
+);
+
+
+
+const result =
+await response.json();
+
+
+
+console.log(
+"Exotel:",
+result
+);
+
+
+
+if(result.success){
+
+
+alert(
+"Connecting call..."
+);
+
+
+}
+
+else{
+
+
+alert(
+"Call failed. Try again."
+);
+
+
+}
+
+
+
+}
+catch(error){
+
+
+console.error(
+error
+);
+
+
+alert(
+"Unable to connect call"
+);
+
+
+}
+
+
+
+finally{
+
+
+callButton.innerHTML =
+"📞 Call Owner";
+
+
+callButton.disabled=false;
+
+
+}
+
+
+
+};
+
+
+
+callButton.style.display =
+"inline-block";
+
+
+
+}
+catch(error){
+
+
+console.error(
+"Owner load error",
+error
+);
+
+
+ownerName.textContent =
+"Error Loading";
+
+
+vehicleNumber.textContent =
+"Try again later";
+
+
+callButton.style.display =
+"none";
+
+
+}
+
+
+
+}
+
+
 
 loadOwner();
