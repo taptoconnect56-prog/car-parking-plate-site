@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Sticker Management | Tap to Connect</title>
+
+
+<style>
+
+*{
+    box-sizing:border-box;
+}
+
+
+body{
+
+    margin:0;
+
+    font-family:Arial, sans-serif;
+
+    background:#f5f7fb;
+
+    color:#222;
+
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.header{
+
+    background:#0066ff;
+
+    color:white;
+
+    padding:20px;
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+}
+
+
+.header h1{
+
+    margin:0;
+
+    color:white;
+
+    font-size:24px;
+
+}
+
+
+.header-buttons{
+
+    display:flex;
+
+    gap:10px;
+
+}
+
+
+/* =========================
+   BUTTONS
+========================= */
+
+button{
+
+    border:none;
+
+    padding:12px 20px;
+
+    border-radius:7px;
+
+    cursor:pointer;
+
+    font-weight:bold;
+
+    font-size:14px;
+
+}
+
+
+button:disabled{
+
+    opacity:0.6;
+
+    cursor:not-allowed;
+
+}
+
+
+.clean-btn{
+
+    background:#ff9800;
+
+    color:white;
+
+}
+
+
+.generate-btn{
+
+    background:#0066ff;
+
+    color:white;
+
+}
+
+
+.back-btn{
+
+    background:white;
+
+    color:#0066ff;
+
+}
+
+
+/* =========================
+   CONTAINER
+========================= */
+
+.container{
+
+    width:90%;
+
+    max-width:1200px;
+
+    margin:30px auto;
+
+}
+
+
+/* =========================
+   BOX
+========================= */
+
+.box{
+
+    background:white;
+
+    padding:25px;
+
+    border-radius:12px;
+
+    margin-bottom:25px;
+
+    box-shadow:
+    0 5px 20px rgba(0,0,0,0.08);
+
+}
+
+
+.box h2{
+
+    margin-top:0;
+
+    color:#222;
+
+}
+
+
+/* =========================
+   INPUT
+========================= */
+
+input{
+
+    width:250px;
+
+    padding:12px;
+
+    border:1px solid #ccc;
+
+    border-radius:7px;
+
+    font-size:15px;
+
+}
+
+
+/* =========================
+   INFO
+========================= */
+
+.info{
+
+    margin-top:18px;
+
+    padding:15px;
+
+    background:#eef5ff;
+
+    border-radius:8px;
+
+    color:#333;
+
+    line-height:1.6;
+
+}
+
+
+/* =========================
+   TABLE
+========================= */
+
+.table-wrapper{
+
+    width:100%;
+
+    overflow-x:auto;
+
+}
+
+
+table{
+
+    width:100%;
+
+    border-collapse:collapse;
+
+}
+
+
+th{
+
+    background:#0066ff;
+
+    color:white;
+
+    padding:14px;
+
+    text-align:left;
+
+}
+
+
+td{
+
+    padding:14px;
+
+    border-bottom:1px solid #ddd;
+
+    color:#333;
+
+    background:white;
+
+}
+
+
+tbody tr:hover td{
+
+    background:#f2f6ff;
+
+}
+
+
+/* =========================
+   STATUS
+========================= */
+
+.status-active{
+
+    color:green;
+
+    font-weight:bold;
+
+}
+
+
+.status-available{
+
+    color:#0066ff;
+
+    font-weight:bold;
+
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media(max-width:600px){
+
+    .header{
+
+        flex-direction:column;
+
+        gap:15px;
+
+        text-align:center;
+
+    }
+
+
+    .header-buttons{
+
+        width:100%;
+
+        flex-direction:column;
+
+    }
+
+
+    .header-buttons button{
+
+        width:100%;
+
+    }
+
+
+    input{
+
+        width:100%;
+
+        margin-bottom:10px;
+
+    }
+
+
+    .generate-btn{
+
+        width:100%;
+
+    }
+
+}
+
+</style>
+
+</head>
+
+
+
+<body>
+
+
+<!-- =========================
+     HEADER
+========================= -->
+
+<header class="header">
+
+
+<h1>
+Tap to Connect
+</h1>
+
+
+
+<div class="header-buttons">
+
+
+<button
+type="button"
+class="clean-btn"
+id="cleanBtn"
+onclick="testCleanButton()">
+
+Clean Duplicates
+
+</button>
+
+
+
+<button
+type="button"
+class="back-btn"
+onclick="goBack()">
+
+Dashboard
+
+</button>
+
+
+</div>
+
+
+</header>
+
+
+
+<!-- =========================
+     MAIN
+========================= -->
+
+<div class="container">
+
+
+
+<!-- GENERATE BOX -->
+
+<div class="box">
+
+
+<h2>
+Sticker Management
+</h2>
+
+
+<p>
+Create numbered Tap to Connect stickers.
+</p>
+
+
+<br>
+
+
+
+<input
+type="number"
+id="stickerCount"
+placeholder="Example: 500"
+min="1"
+max="500">
+
+
+
+<button
+type="button"
+class="generate-btn"
+id="createBtn">
+
+Generate
+
+</button>
+
+
+
+<div class="info">
+
+<strong>Important:</strong>
+
+<br>
+
+Maximum 500 stickers can be generated.
+
+<br>
+
+Existing Sticker IDs will automatically be skipped.
+
+<br>
+
+Duplicate Sticker IDs can be cleaned using the orange button.
+
+</div>
+
+
+</div>
+
+
+
+
+<!-- STICKER TABLE -->
+
+<div class="box">
+
+
+<h2>
+Sticker List
+</h2>
+
+
+<br>
+
+
+
+<div class="table-wrapper">
+
+
+<table>
+
+
+<thead>
+
+<tr>
+
+<th>
+Sticker ID
+</th>
+
+
+<th>
+Owner
+</th>
+
+
+<th>
+Vehicle
+</th>
+
+
+<th>
+Mobile
+</th>
+
+
+<th>
+Status
+</th>
+
+</tr>
+
+</thead>
+
+
+
+<tbody id="stickerTable">
+
+</tbody>
+
+
+</table>
+
+
+</div>
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+<!-- =========================
+     BUTTON TEST
+========================= -->
+
+<script>
+
+function testCleanButton(){
+
+    alert(
+        "Clean Duplicates button is working!"
+    );
+
+}
+
+</script>
+
+
+
+<!-- =========================
+     MAIN JAVASCRIPT
+========================= -->
+
+<script
+type="module"
+src="sticker.js">
+</script>
+
+
+<script>
+const params = new URLSearchParams(window.location.search);
+
+const stickerId =
+    params.get("sticker") ||
+    params.get("stickerId");
+
+if (stickerId) {
+    window.location.href =
+        "owner.html?sticker=" +
+        encodeURIComponent(stickerId);
+}
+</script>
+</body>
+
+</html>

@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0">
+
+<title>Activate Sticker | Tap to Connect</title>
+
+
+<style>
+
+*{
+    box-sizing:border-box;
+}
+
+
+body{
+
+    margin:0;
+
+    font-family:Arial,sans-serif;
+
+    background:#f5f7fb;
+
+    color:#222;
+
+}
+
+
+.header{
+
+    background:#0066ff;
+
+    color:white;
+
+    padding:20px;
+
+    text-align:center;
+
+}
+
+
+.header h1{
+
+    margin:0;
+
+    color:white;
+
+}
+
+
+.container{
+
+    width:92%;
+
+    max-width:500px;
+
+    margin:40px auto;
+
+}
+
+
+.card{
+
+    background:white;
+
+    padding:30px;
+
+    border-radius:15px;
+
+    box-shadow:
+    0 5px 25px rgba(0,0,0,0.08);
+
+}
+
+
+h2{
+
+    margin-top:0;
+
+    text-align:center;
+
+}
+
+
+.subtitle{
+
+    text-align:center;
+
+    color:#666;
+
+    line-height:1.5;
+
+    margin-bottom:25px;
+
+}
+
+
+.sticker-box{
+
+    background:#eef5ff;
+
+    padding:15px;
+
+    border-radius:8px;
+
+    margin-bottom:20px;
+
+    text-align:center;
+
+}
+
+
+.sticker-box strong{
+
+    color:#0066ff;
+
+    font-size:18px;
+
+}
+
+
+label{
+
+    display:block;
+
+    margin-top:18px;
+
+    margin-bottom:7px;
+
+    font-weight:bold;
+
+}
+
+
+input{
+
+    width:100%;
+
+    padding:13px;
+
+    border:1px solid #ccc;
+
+    border-radius:7px;
+
+    font-size:15px;
+
+}
+
+
+button{
+
+    width:100%;
+
+    margin-top:18px;
+
+    padding:14px;
+
+    border:0;
+
+    border-radius:7px;
+
+    background:#0066ff;
+
+    color:white;
+
+    font-size:16px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+
+}
+
+
+button:disabled{
+
+    opacity:.6;
+
+    cursor:not-allowed;
+
+}
+
+
+.otp-section{
+
+    display:none;
+
+}
+
+
+.message{
+
+    margin-top:18px;
+
+    padding:13px;
+
+    border-radius:7px;
+
+    display:none;
+
+}
+
+
+.message.success{
+
+    display:block;
+
+    background:#e8f7ee;
+
+    color:#187a3d;
+
+}
+
+
+.message.error{
+
+    display:block;
+
+    background:#fdeaea;
+
+    color:#b42318;
+
+}
+
+
+#recaptcha-container{
+
+    margin-top:15px;
+
+}
+
+
+@media(max-width:600px){
+
+    .container{
+
+        width:94%;
+
+        margin:25px auto;
+
+    }
+
+    .card{
+
+        padding:22px;
+
+    }
+
+}
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<header class="header">
+
+<h1>
+Tap to Connect
+</h1>
+
+</header>
+
+
+<div class="container">
+
+
+<div class="card">
+
+
+<h2>
+Activate Your Sticker
+</h2>
+
+
+<p class="subtitle">
+
+Register your vehicle and verify your
+mobile number using OTP.
+
+</p>
+
+
+<!-- STICKER -->
+
+<div class="sticker-box">
+
+Sticker ID:
+
+<strong id="stickerDisplay">
+Checking...
+</strong>
+
+</div>
+
+
+<form id="registerForm">
+
+
+<!-- NAME -->
+
+<label for="name">
+Name
+</label>
+
+<input
+type="text"
+id="name"
+placeholder="Enter your name"
+required>
+
+
+<!-- MOBILE -->
+
+<label for="mobile">
+Mobile Number
+</label>
+
+<input
+type="tel"
+id="mobile"
+placeholder="10-digit mobile number"
+maxlength="10"
+inputmode="numeric"
+required>
+
+
+<!-- SEND OTP -->
+
+<button
+type="button"
+id="sendOtpBtn">
+
+Send OTP
+
+</button>
+
+
+<!-- RECAPTCHA -->
+
+<div id="recaptcha-container"></div>
+
+
+<!-- OTP SECTION -->
+
+<div
+class="otp-section"
+id="otpSection">
+
+
+<label for="otp">
+Enter OTP
+</label>
+
+
+<input
+type="text"
+id="otp"
+placeholder="Enter 6-digit OTP"
+maxlength="6"
+inputmode="numeric">
+
+
+<button
+type="button"
+id="verifyOtpBtn">
+
+Verify OTP
+
+</button>
+
+
+</div>
+
+
+<!-- VEHICLE -->
+
+<label for="vehicle">
+Vehicle Number
+</label>
+
+<input
+type="text"
+id="vehicle"
+placeholder="Example: KL56AA1028"
+required>
+
+
+<!-- FINAL ACTIVATION -->
+
+<button
+type="submit"
+id="activateBtn"
+disabled>
+
+Activate Sticker
+
+</button>
+
+
+</form>
+
+
+<div
+id="message"
+class="message">
+</div>
+
+
+</div>
+
+</div>
+
+
+<script
+type="module"
+src="./register.js">
+</script>
+
+
+</body>
+
+</html>
